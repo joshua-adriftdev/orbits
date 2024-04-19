@@ -28,7 +28,23 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [correct, setCorrect] = useState<number>(0);
 
-  // To be replaced with MySQL lookup.
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { rows } = await sql`SELECT * FROM orbits`;
+        console.log(rows);
+        //const fetchedOrder = rows[0].words;
+        //const fetchedTheme = rows[0].theme; // Assuming the theme is the same for all rows
+        //setOrder(fetchedOrder);
+        //setTheme(fetchedTheme);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  /* To be replaced with MySQL lookup.
   const getOrder = async () => {
     const { rows } = await sql`SELECT * FROM orbits`;
     console.log("DB: " + rows);
@@ -40,7 +56,7 @@ export default function Home() {
 
   useEffect(() => {
     getOrder();
-  }, []);
+  }, []);*/
 
   const [displayWords, setDisplayWords] = useState<string[]>([]);
   useEffect(() => {
