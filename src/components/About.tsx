@@ -6,10 +6,8 @@ const About: React.FC = () => {
       <div className="bg-disabled overflow-hidden h-max flex flex-col justify-center items-center text-center">
         <div className="pt-8 font-bold text-content text-[24px]">About The Game</div>
         <div className="px-8 pt-2 max-w-screen-md text-center text-content font-normal text-[16px]">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        Orbits is a circular word game where players must select words in the correct order from a loop of eight options. 
+        You can begin with any word, but success depends on following the correct sequence to complete the circle.
         </div>
         <div className="pt-8 flex flex-col text-center text-contentSecondary text-[16px] pb-16">
             <div>Designed and built by <a className="underline" href="https://www.x.com" target="_blank" rel="noopener noreferrer">andrewdegi</a></div>

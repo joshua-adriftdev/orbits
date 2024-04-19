@@ -13,6 +13,8 @@ import banner from "../../public/banner.png"
 import About from "@/components/About";
 import Head from "next/head";
 
+import { sql } from "@vercel/postgres";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
@@ -27,10 +29,18 @@ export default function Home() {
   const [correct, setCorrect] = useState<number>(0);
 
   // To be replaced with MySQL lookup.
-  const getOrder = () => {
-
+  const getOrder = async () => {
+    const { rows } = await sql`SELECT * FROM orbits`;
+    console.log("DB: " + rows);
+    const fetchedOrder = rows.map(row => row.words);
+    const fetchedTheme = rows[0].theme; // Assuming the theme is the same for all rows
+    setOrder(fetchedOrder);
+    setTheme(fetchedTheme);
   }
 
+  useEffect(() => {
+    getOrder();
+  }, []);
 
   const [displayWords, setDisplayWords] = useState<string[]>([]);
   useEffect(() => {
