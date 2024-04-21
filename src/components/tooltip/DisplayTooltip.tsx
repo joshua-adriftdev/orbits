@@ -12,6 +12,12 @@ const DisplayTooltip: React.FC<DisplayTooltipProps> = ({ isOpen, setIsOpen }) =>
   const handleHowToPlay = () => {
     setIsOpen(true);
     setVisible(false);
+
+    // Timeout for mobile-weirdness
+    setTimeout(() => {
+      setVisible(false);
+    }, 100)
+
   }
 
   return (
