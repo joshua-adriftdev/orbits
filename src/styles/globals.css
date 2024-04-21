@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  @apply font-poppins
+}
 
 .line-horizontal {
   background: linear-gradient(to left, #ECEFF1 50%, #8AD103 50%) right;
@@ -21,3 +27,218 @@
 .line-vertical:hover {
   background-position: top;
 }
+
+
+
+.main-container > div:first-child {
+  transition-delay: 0s;
+
+}
+
+.connecting-line{
+  background-color: #ECEFF1;
+  position: absolute;
+
+}
+
+.connecting-line .connecting-line-fill{
+  background: rgb(138, 209, 3);
+
+}
+
+.connecting-line-1 {
+  left: 0%;
+  top: 13%;
+  width: 600px;
+  height: 15px;
+  transition: left 0.35s ease;
+
+  @media(max-width: 959px) {
+    left: 0%;
+    top: 7%;
+    left: 40%;
+    width: 50px;
+  }
+}
+
+.connecting-line-1 .connecting-line-fill {
+  position: absolute;
+  content: '';
+  width: 600px;
+  left: -90%;
+  top: 0;
+  height: 15px;
+  transition: left ease 0.35s;
+
+  @media(max-width: 959px) {
+    left: -100%;
+    top: 0%;
+    width: 50px;
+
+  }
+}
+
+.connecting-line-2 {
+  left: 0%;
+  bottom: 13%;
+  top: auto;
+  
+  width: 600px;
+  height: 15px;
+
+  @media(max-width: 959px) {
+    left: 42%;
+    width: 50px;
+    bottom: 7%;
+  }
+}
+
+.connecting-line-2 .connecting-line-fill {
+  position: absolute;
+  content: '';
+  width: 0px;
+  left: 100%;
+  top: 0;
+  width: 585px;
+  height: 15px;
+
+  transition: left 0.35s ease;
+
+  @media(max-width: 959px) {
+    left: auto;
+
+    width: 50px;
+    bottom: 5%;
+    right: -100%;
+    transition: right 0.35s ease;
+
+  }
+}
+
+.connecting-line-3 .connecting-line-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 0px;
+  width: 15px;
+  transition: height 0.35s ease;
+
+  @media(max-width: 959px) {
+
+    left: auto;
+    top: -100%;
+    right: 0%;
+    height: 193px;
+    transition: top 0.35s ease;
+
+
+  }
+
+}
+
+.connecting-line-3 {
+  right: 8%;
+  left: auto;
+  top: 10%;
+  bottom: 18%;
+  width: 15px;
+  height: 100px;
+
+  @media(max-width: 959px) {
+    left: auto;
+    top: 16%;
+    right: 18%;
+    height: 200px;
+
+  }
+}
+
+.connecting-line-4 {
+  top: 66%;
+  bottom: auto;
+  width: 15px;
+  height: 118px;
+
+  left: 9%;
+  transition: top 0.35s ease;
+  background: rgb(138, 209, 3);
+
+  @media(max-width: 959px) {
+    top: auto;
+    bottom: 15%;
+    background-color: #ECEFF1;
+
+    left: 20%;
+    
+
+  }
+}
+
+.connecting-line-4 .connecting-line-fill {
+  @media(max-width: 959px) {
+    top: auto;
+    bottom: -100%;
+    width: 15px;
+    height: 118px;
+    left: 0%;
+    position: absolute;
+    transition: bottom 0.35s ease;
+
+  }
+
+}
+
+.connecting-line-5{
+  display: none;
+
+  @media(max-width: 959px) {
+    display: block;
+    position: absolute;
+    left: 20%;
+    top: auto;
+    bottom: 60%;
+    width: 15px;
+    height: 40px;
+    background: rgb(138, 209, 3);
+    transition: bottom 0.35s ease 0.35s;
+
+  }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+.incorrect {
+  animation: shake 0.6s ease forwards, changeColor 0.6s ease forwards;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes changeBackgroundColor {
+  0% { background-color: inherit; }
+  50% { background-color: #EF5350; }
+  100% { background-color: inherit; }
+}
+
+@keyframes changeTextColor {
+  0% { color: inherit; }
+  50% { color: white; }
+  100% { color: inherit; }
+}
+
+.incorrect {
+  animation: shake 0.3s ease forwards, changeBackgroundColor 0.6s ease forwards, changeTextColor 0s ease forwards;
+}
+
+

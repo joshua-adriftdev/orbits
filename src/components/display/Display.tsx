@@ -18,6 +18,8 @@ const Display: React.FC<DisplayProps> = ({ word, mistakes }) => {
   const breakpoint = useMediaQuery("(min-width: 1024px)") ? "lg" : "xs";
   const wordOrder = breakpoint === "lg" ? lgWordOrder : xsWordOrder;
 
+  const isMobile = useMediaQuery("(max-width: 959px)")
+
   const addWord = (newWord: string) => {
     const nextIndex = words.findIndex(w => !w); // Find the index of the next empty slot
     if (nextIndex !== -1) {
@@ -30,24 +32,176 @@ const Display: React.FC<DisplayProps> = ({ word, mistakes }) => {
   };
 
   useEffect(() => {
-    console.log("Current word has changed:", word);
     addWord(word);
   }, [word]);
 
-  useEffect(() => {
-    console.log("Updated words array:", words);
-  }, [words]); // Log the updated words array
 
   useEffect(() => {
     setWords(Array.from({ length: 8 }, () => "")); // Clear the array
+
+    const mainContainer = document.querySelector('.main-container');
+
+    if (mainContainer) {
+      const lineDiv = mainContainer.querySelectorAll('.connecting-line');
+
+      lineDiv.forEach((div: Element) => {
+        const lineFill = div.querySelector('.connecting-line-fill') as HTMLElement;
+        if (lineFill) {
+          lineFill.style.removeProperty('left');
+          lineFill.style.removeProperty('height');
+          lineFill.style.removeProperty('top');
+          lineFill.style.removeProperty('right');
+        }
+        if (div instanceof HTMLElement) {
+          div.style.removeProperty('top');
+        }
+      });
+    }
+
+    // Remove inline styles from each .connecting-line-fill element
+
   }, [mistakes]);
 
+  useEffect(() => {
+    // For animating lines 
+
+    const index = words.findIndex(w => w === word);
+
+    const mainContainer = document.querySelector('.main-container');
+
+    if (mainContainer) {
+      const lineDiv = mainContainer.querySelectorAll('.connecting-line')
+
+      // For less than 960px screen
+
+      if (isMobile) {
+        if (index === 1) {
+          const lineDivFill = lineDiv[0].querySelector('.connecting-line-fill') as HTMLElement;
+
+          if (lineDivFill) {
+            lineDivFill.style.left = `0%`
+          }
+        }
+        if (index < 5 && index > 1) {
+
+          const lineDivFill = lineDiv[2].querySelector('.connecting-line-fill') as HTMLElement
+
+          const lineDivFillStyle = window.getComputedStyle(lineDivFill).top;
+
+          const lineDivFillStyleTop = parseFloat(lineDivFillStyle);
+          if (lineDiv[2] instanceof HTMLElement) {
+            const parentHeight = lineDiv[2].offsetHeight;
+            const topPercentage = (lineDivFillStyleTop / parentHeight) * 100;
+            lineDivFill.style.top = `${topPercentage + 35}%`;
+          }
+
+
+        }
+
+        if (index === 5) {
+          const lineDivFill = lineDiv[1].querySelector('.connecting-line-fill') as HTMLElement;
+
+          if (lineDivFill) {
+
+            lineDivFill.style.right = `0%`
+          }
+        }
+        if (index > 5 && index < 8) {
+          const lineDivFill = lineDiv[3].querySelector('.connecting-line-fill') as HTMLElement;
+
+          const lineDivFillStyle = window.getComputedStyle(lineDivFill).bottom;
+
+          const lineDivFillStyleBottom = parseFloat(lineDivFillStyle);
+          if (lineDiv[3] instanceof HTMLElement) {
+
+            const parentHeight = lineDiv[3].offsetHeight;
+            const bottomPercentage = (lineDivFillStyleBottom / parentHeight) * 100;
+
+            lineDivFill.style.bottom = `${bottomPercentage + 50}%`
+          }
+
+
+        }
+
+        if (index === 7) {
+          if (lineDiv[4] instanceof HTMLElement) {
+            lineDiv[4].style.bottom = `70%`
+          }
+        }
+      } else {
+        // For more than 960px screen
+        if (index < 4 && index > 0) {
+          const lineDivFill = lineDiv[0].querySelector('.connecting-line-fill') as HTMLElement;
+
+          const lineDivFillStyle = window.getComputedStyle(lineDivFill).left;
+
+          const lineDivFillStyleLeft = parseFloat(lineDivFillStyle);
+          if (lineDiv[1] instanceof HTMLElement) {
+
+          const parentWidth = lineDiv[1].offsetWidth;
+          const leftPercentage = (lineDivFillStyleLeft / parentWidth) * 100;
+          lineDivFill.style.left = `${leftPercentage + 28}%`
+          }
+
+        }
+
+        if (index === 4) {
+          const lineDivFill = lineDiv[2].querySelector('.connecting-line-fill') as HTMLElement;
+          if (lineDivFill) {
+
+          lineDivFill.style.height = '100px'
+          }
+        }
+
+        if (index > 4) {
+          const lineDivFill = lineDiv[1].querySelector('.connecting-line-fill')  as HTMLElement;
+          const lineDivFillStyle = window.getComputedStyle(lineDivFill).left;
+          const lineDivFillStyleLeft = parseFloat(lineDivFillStyle);
+
+          if (lineDiv[1] instanceof HTMLElement) {
+
+          const parentWidth = lineDiv[1].offsetWidth;
+          const leftPercentage = (lineDivFillStyleLeft / parentWidth) * 100;
+          lineDivFill.style.left = `${leftPercentage - 28}%`
+          }
+        }
+
+        if (index === 7) {
+          if (lineDiv[3] instanceof HTMLElement) {
+
+          lineDiv[3].style.top = `${10}%`
+          lineDiv[3].style.transitionDelay = `0.4s`
+          }
+        }
+      }
+    }
+
+  }, [words]);
+
   return (
-    <div className="grid grid-rows-4 lg:grid-rows-2 grid-cols-2 lg:grid-cols-4 items-center justify-center gap-x-[40px] gap-y-[20px] lg:gap-[55px] relative">
-      {Array.from({ length: 8 }, (_, index) => (
-        <DisplayElement key={index} index={index} word={words[wordOrder[index]]} mistakes={mistakes} />
-      ))}
-    </div>
+    <>
+      <div className="main-container overflow-hidden grid grid-rows-4 lg:grid-rows-2 grid-cols-2 lg:grid-cols-4 items-center justify-center gap-x-[40px] gap-y-[20px] lg:gap-[55px] relative">
+
+        {Array.from({ length: 8 }, (_, index) => (
+          <DisplayElement key={index} index={index} word={words[wordOrder[index]]} mistakes={mistakes} />
+        ))}
+        <div className="connecting-line connecting-line-1">
+          <div className="connecting-line-fill"></div>
+        </div>
+        <div className="connecting-line connecting-line-2">
+          <div className="connecting-line-fill"></div>
+        </div>
+        <div className="connecting-line connecting-line-3">
+          <div className="connecting-line-fill"></div>
+        </div>
+        <div className="connecting-line connecting-line-4">
+          <div className="connecting-line-fill"></div>
+
+        </div>
+        <div className="connecting-line connecting-line-5"></div>
+      </div>
+
+    </>
   );
 };
 

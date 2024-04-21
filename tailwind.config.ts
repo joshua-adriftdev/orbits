@@ -1,3 +1,4 @@
+import { Rethink_Sans } from "next/font/google";
 import type { Config } from "tailwindcss";
 
 const withMT = require("@material-tailwind/react/utils/withMT");
@@ -23,8 +24,12 @@ const config: Config = {
         "disabledStroke": '#DDE0E5',
         "disabledText": '#CFD8DC',
         "red": '#EF5350',
+      },
+      fontFamily: {
+        poppins: ["Poppins", 'sans-serif']
       }
     },
+    
   },
   plugins: [],
 };

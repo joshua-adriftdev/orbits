@@ -13,11 +13,7 @@ export default function Test() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Get the current date in the format YYYY-MM-DD
-        const currentDate = new Date().toISOString().split('T')[0];
-
-        // Make a GET request to the API route with the current date parameter
-        const response = await fetch(`/api/orbits?date=${currentDate}`);
+        const response = await fetch(`/api/orbits/`);
         const fetchedData = await response.json();
 
         setData(fetchedData);

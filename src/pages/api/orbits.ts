@@ -4,17 +4,11 @@ import { sql } from '@vercel/postgres';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { date } = req.query;
-    
-    // Check if the date parameter is provided
-    if (!date || typeof date !== 'string') {
-      return res.status(400).json({ error: 'Date parameter is missing or invalid' });
-    }
+    // server side date
+    const currentDate = new Date().toISOString().split('T')[0];
 
-    // Fetch the row from the database where the date matches
-    const { rows } = await sql`SELECT * FROM orbits WHERE date = ${date}`;
-    
-    // Check if any rows are found
+    const { rows } = await sql`SELECT * FROM orbits WHERE date = ${currentDate}`;
+
     if (rows.length === 0) {
       return res.status(404).json({ error: 'No data found for the specified date' });
     }
