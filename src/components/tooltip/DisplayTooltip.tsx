@@ -16,7 +16,7 @@ const DisplayTooltip: React.FC<DisplayTooltipProps> = ({ isOpen, setIsOpen }) =>
     // Timeout for mobile-weirdness
     setTimeout(() => {
       setVisible(false);
-    }, 100)
+    }, 10)
 
   }
 

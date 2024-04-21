@@ -43,8 +43,6 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
-        // Make a GET request to the API route with the current date parameter
         const response = await fetch(`/api/orbits/`);
         const fetchedData: Orbit = await response.json();
 
