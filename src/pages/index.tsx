@@ -11,8 +11,10 @@ import Head from "next/head";
 
 import WordBankTooltip from "@/components/tooltip/WordBankTooltip";
 import DisplayTooltip from "@/components/tooltip/DisplayTooltip";
-import Introduction from "@/components/Introduction";
-import { hasCookie } from "cookies-next";
+import Introduction from "@/components/popups/Introduction";
+import { getCookie, hasCookie, setCookie } from "cookies-next";
+import CookieBanner from "@/components/cookies/CookieBanner";
+import VictoryPopup from "@/components/popups/Victory";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +33,7 @@ export default function Home() {
   const [forceDisable, setForceDisable] = useState<boolean>(false);
 
   const [word, setWord] = useState<string>(""); // Ued to update Display.tsx with the newly selected word
+  const [firstWord, setFirstWord] = useState<string>("");
 
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [correct, setCorrect] = useState<number>(0);
@@ -38,19 +41,26 @@ export default function Home() {
   const [data, setData] = useState<Orbit | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [showIntroduction, setShowIntroduction] = useState<boolean>(!hasCookie("user"))
+  const [showIntroduction, setShowIntroduction] = useState<boolean>(false)
+  const [showVictory, setShowVictory] = useState<boolean>(false);
 
   useEffect(() => {
+    setShowIntroduction(!hasCookie("user"));
+
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/orbits/`);
-        const fetchedData: Orbit = await response.json();
+        // format date to YYYY-MM-DD
+        const currentDate = new Date().toISOString().split('T')[0];
 
+        const apiUrl = `/api/orbits?date=${currentDate}`;
+    
+        const response = await fetch(apiUrl);
+        const fetchedData = await response.json();
+    
         setData(fetchedData);
-        
         setOrder(fetchedData.words);
         setTheme(fetchedData.theme);
-
+    
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -71,6 +81,10 @@ export default function Home() {
     const wordIndex = order.indexOf(word);
 
     if (currentIndex == -1 || wordIndex == currentIndex+1 || (currentIndex == order.length-1 && wordIndex == 0)) {
+      if (currentIndex == -1) {
+        setFirstWord(order.at(wordIndex) as string);
+      }
+
       setCurrentIndex(wordIndex);
       setCorrect(correct+1);
       checkWin(correct+1);
@@ -106,6 +120,16 @@ export default function Home() {
   const checkWin = (correct: number): boolean => {
     if (correct == order.length) {
       console.log("Win!!");
+      
+      // has the user already completed this level?
+      const currentDate = new Date().toISOString().split('T')[0];
+      if (!hasCookie(currentDate)) {
+        setCookie("streak", (hasCookie("streak") ? Number(getCookie("streak")) : 0) + 1, {maxAge: 60 * 60 * 24});
+        setCookie(currentDate, "true");
+      }
+
+      setShowVictory(true);
+
       return true;
     }
 
@@ -116,9 +140,12 @@ export default function Home() {
   const displayDate:string = date.toLocaleDateString('default', { month: 'long'}) + " " + date.getDate() + ", " + date.getFullYear()
 
 
-  const handleChangeIntroductionState = (state: boolean) => {
-    console.log("Setting to: " + state);
+  const introductionCallback = (state: boolean) => {
     setShowIntroduction(state);
+  }
+
+  const victoryCallback = (state: boolean) => {
+    setShowVictory(state);
   }
 
   return (
@@ -128,7 +155,13 @@ export default function Home() {
       </Head>
       <main className={`flex flex-col items-center justify-between ${inter.className}`}>
         <div className={showIntroduction ? "fixed z-30" : "hidden"}>
-          <Introduction isOpen={showIntroduction} setIsOpen={handleChangeIntroductionState}/>
+          <Introduction isOpen={showIntroduction} callback={introductionCallback}/>
+        </div>
+        <div className="fixed z-30">
+          <VictoryPopup isOpen={showVictory} callback={victoryCallback} mistakes={mistakes} firstWord={firstWord}/>
+        </div>
+        <div className="z-20">
+          <CookieBanner/>
         </div>
         <Image src={banner} alt="alt" width={240} height={75} className="mt-4 lg:hidden"/>
         <Image src={banner} alt="alt" width={300} height={0} className="mt-4 hidden lg:block"/>
@@ -142,7 +175,7 @@ export default function Home() {
 
         <div className="w-full flex justify-center items-center mt-4">
           <div className="grid grid-cols-3 w-[290px] lg:w-[670px]">
-            <div className="flex justify-end items-end col-start-3"><DisplayTooltip isOpen={showIntroduction} setIsOpen={handleChangeIntroductionState}/></div>
+            <div className="flex justify-end items-end col-start-3"><DisplayTooltip isOpen={showIntroduction} setIsOpen={introductionCallback}/></div>
           </div>
         </div>
 
@@ -154,11 +187,11 @@ export default function Home() {
           <div className="grid grid-cols-3 w-[290px] lg:w-[670px]">
             <div className="justify-self-center col-start-2">
               <div className="flex flex-col items-center">
-                <div className="text-content text-[18.5px] lg:text-[24px] font-medium lg:font-normal">Word Bank</div>
+                <div className="text-content text-[17px] lg:text-[24px] font-medium lg:font-normal">Word Bank</div>
                 
               </div>
             </div>
-            <div className="flex justify-end items-end "><WordBankTooltip/></div>
+            <div className="flex justify-end items-end "><WordBankTooltip isOpen={showIntroduction} setIsOpen={introductionCallback}/></div>
           </div>
         </div>
 

@@ -5,14 +5,15 @@ import {
     IconButton,
     Typography,
   } from "@material-tailwind/react";
+import { setCookie } from "cookies-next";
   import React, { useEffect, useState } from "react";
   
   type IntroductionProps = {
     isOpen: boolean;
-    setIsOpen: (open: boolean) => void;
+    callback: (open: boolean) => void;
   };
   
-  const Introduction: React.FC<IntroductionProps> = ({ isOpen, setIsOpen }) => {
+  const Introduction: React.FC<IntroductionProps> = ({ isOpen, callback: setIsOpen }) => {
     const [open, setOpen] = useState<boolean>(isOpen);
     const [closing, setClosing] = useState<boolean>(false);
   
@@ -22,6 +23,10 @@ import {
   
     const handleClose = () => {
       setClosing(true);
+        
+      setCookie("user", true);
+      setCookie("streak", 0);
+
       setTimeout(() => {
         setOpen(false);
         setIsOpen(false);
