@@ -11,7 +11,7 @@ import Head from "next/head";
 
 import WordBankTooltip from "@/components/tooltip/WordBankTooltip";
 import DisplayTooltip from "@/components/tooltip/DisplayTooltip";
-import Introduction from "@/components/popups/Introduction";
+import HowToPlay from "@/components/popups/HowToPlay";
 import { getCookie, hasCookie, setCookie } from "cookies-next";
 import CookieBanner from "@/components/cookies/CookieBanner";
 import VictoryPopup from "@/components/popups/Victory";
@@ -124,8 +124,19 @@ export default function Home() {
       // has the user already completed this level?
       const currentDate = new Date().toISOString().split('T')[0];
       if (!hasCookie(currentDate)) {
-        setCookie("streak", (hasCookie("streak") ? Number(getCookie("streak")) : 0) + 1, {maxAge: 60 * 60 * 24});
+        
+        if (hasCookie("last")) { // stores the last date they completed- used to determine streaks
+          if (isYesterday(getCookie("last") as string)) { // user has completed yesterday's puzzle
+            setCookie("streak", (hasCookie("streak") ? Number(getCookie("streak")) : 0) + 1, {maxAge: 60 * 60 * 24});
+          } else {
+            setCookie("streak", 0);
+          }
+        } else {
+          setCookie("streak", 1);
+        }
+
         setCookie(currentDate, "true");
+          setCookie("last", currentDate);
       }
 
       setShowVictory(true);
@@ -155,7 +166,7 @@ export default function Home() {
       </Head>
       <main className={`flex flex-col items-center justify-between ${inter.className}`}>
         <div className={showIntroduction ? "fixed z-30" : "hidden"}>
-          <Introduction isOpen={showIntroduction} callback={introductionCallback}/>
+          <HowToPlay isOpen={showIntroduction} callback={introductionCallback}/>
         </div>
         <div className="fixed z-30">
           <VictoryPopup isOpen={showVictory} callback={victoryCallback} mistakes={mistakes} firstWord={firstWord}/>
@@ -225,3 +236,22 @@ export function shuffleWords(array: string[]): string[] {
 
   return array;
 };
+
+function isYesterday(dateString: string): boolean {
+  // Convert date string to Date object
+  const date = new Date(dateString);
+
+  // Get current date
+  const currentDate = new Date();
+  
+  // Subtract one day
+  const yesterday = new Date(currentDate);
+  yesterday.setDate(currentDate.getDate() - 1);
+
+  // Compare year, month, and day
+  return (
+    date.getFullYear() === yesterday.getFullYear() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getDate() === yesterday.getDate()
+  );
+}

@@ -1,9 +1,21 @@
-import Confetti from "@/components/Confetti"
+import React, { useRef } from "react";
+import Confetti, { ConfettiRef } from "../components/Confetti"; // Adjust the import path as needed
 
-const Test = () => {
-    return (
-        <Confetti/>
-    )
-}
+const ParentComponent: React.FC = () => {
+  const confettiRef = useRef<ConfettiRef>(null);
 
-export default Test;
+  const handleShootConfetti = () => {
+    if (confettiRef.current) {
+      confettiRef.current.shoot();
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleShootConfetti}>Shoot Confetti</button>
+      <Confetti ref={confettiRef} />
+    </div>
+  );
+};
+
+export default ParentComponent;

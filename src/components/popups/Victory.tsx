@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -11,8 +11,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import Image from "next/image";
-
-import Confetti from "react-canvas-confetti/dist/presets/realistic"
+import Confetti, { ConfettiRef } from "../Confetti";
 
 type VictoryPopupProps = {
   isOpen: boolean;
@@ -22,6 +21,14 @@ type VictoryPopupProps = {
 };
 
 const VictoryPopup: React.FC<VictoryPopupProps> = ({ isOpen, callback: setIsOpen, mistakes, firstWord }) => {
+    const confettiRef = useRef<ConfettiRef>(null);
+
+    const handleShootConfetti = () => {
+        if (confettiRef.current) {
+          confettiRef.current.shoot();
+        }
+      };
+
     const [visible, setVisible] = useState<boolean>(false);
     const [closing, setClosing] = useState<boolean>(false);
 
@@ -31,6 +38,7 @@ const VictoryPopup: React.FC<VictoryPopupProps> = ({ isOpen, callback: setIsOpen
             setTimeout(() => {
                 setVisible(true);
                 setClosing(false);
+                handleShootConfetti();
             }, 500);
         } else {
             setClosing(true);
@@ -89,8 +97,7 @@ const VictoryPopup: React.FC<VictoryPopupProps> = ({ isOpen, callback: setIsOpen
         <div className="grid h-screen place-items-center">
             <div className="fixed inset-0 bg-black opacity-30"></div>
             <div className="fixed z-50">
-                {/*<Confetti autorun={{ speed: 0.3, delay: 5000, duration: 500}} onInit={}/> */}
-                <Confetti/>
+                <Confetti ref={confettiRef}/>
             </div>
             <Card className={`mx-4 max-w-2xl relative z-40`}>
             <CardBody>

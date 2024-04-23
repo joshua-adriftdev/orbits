@@ -53,13 +53,13 @@ const Word: React.FC<WordProps> = ({ word, onSelectedWord, mistakes, forceDisabl
       ref={buttonRef}
       variant="outlined"
       disabled={used}
-      className={`p-5 w-[126.44px] text-content font-normal ${
+      className={`p-5 w-[126.44px] text-content font-normal border-[2px] ${
         used ? "bg-disabled stroke-disabledStroke text-disabledText" : ""
       }`}
       style={{ fontSize: `${fontSize}px` }} 
       onClick={handleClick}
     >
-      <div className="normal-case">{word}</div>
+      <div className="">{word}</div>
     </Button>
   );
 };
