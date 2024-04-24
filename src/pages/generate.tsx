@@ -75,6 +75,7 @@ const Generate: React.FC = () => {
                     <Popover placement="bottom-start">
                         <PopoverHandler>
                         <Input
+                            crossOrigin={undefined}
                             label="Select a Date"
                             onChange={() => null}
                             value={date ? format(date, "PPP") : ""}
@@ -124,6 +125,7 @@ const Generate: React.FC = () => {
                     </Popover>
                     </div>
                     <Input
+                        crossOrigin={undefined}
                         label="Theme"
                         name="theme"
                         value={formData.theme}
@@ -138,6 +140,7 @@ const Generate: React.FC = () => {
                 <div className='flex flex-col gap-4'>
                     {formData.words.map((word, index) => (
                         <Input
+                            crossOrigin={undefined}
                             key={index}
                             label={`Word ${index + 1}`}
                             name="words"
