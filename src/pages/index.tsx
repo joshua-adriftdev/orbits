@@ -15,6 +15,7 @@ import HowToPlay from "@/components/popups/HowToPlay";
 import { getCookie, hasCookie, setCookie } from "cookies-next";
 import CookieBanner from "@/components/cookies/CookieBanner";
 import VictoryPopup from "@/components/popups/Victory";
+import { Spinner, Typography } from "@material-tailwind/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -180,7 +181,14 @@ export default function Home() {
         {/* Date / Theme */}
         <div className="w-full flex flex-col items-center justify-center">
           <div className="font-light text-[16px] lg:text-[24px]">{displayDate}</div>
-          <div className="font-medium text-[24px] lg:text-[30px]">Theme: <span className="font-normal">{theme}</span></div>
+          <div className="font-medium text-[24px] lg:text-[30px] flex flex-row items-center">Theme: 
+          {loading ? (
+              <div className="max-w-full animate-pulse"><Typography as="div" variant="h3" className="ml-2 mt-1 h-5 w-44 rounded-full bg-disabled">&nbsp;</Typography></div>
+            ) : (
+              <span className="font-normal ml-2">{theme}</span>
+            )
+          }
+          </div>
           <div className="text-content text-[18px] font-light">Mistakes: {mistakes}</div>
         </div>
 
@@ -208,7 +216,12 @@ export default function Home() {
 
 
         <div className="mt-4">
-          <WordBank words={displayWords} onSelectedWord={handleSelectWord} mistakes={0} forceDisable={forceDisable}/>
+          {loading ? (
+              <Spinner className="h-12 w-12 text-gray-300"/>
+            ) : (
+              <WordBank words={displayWords} onSelectedWord={handleSelectWord} mistakes={0} forceDisable={forceDisable}/>
+            )
+          }
         </div>
         <div className="mt-16 min-w-full">
           <About/>
